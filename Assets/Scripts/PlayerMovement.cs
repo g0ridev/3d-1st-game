@@ -11,6 +11,14 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+        // Fixed friction, no clinging to walls
+        Collider col = GetComponent<Collider>();
+        PhysicsMaterial noFriction = new PhysicsMaterial();
+        noFriction.dynamicFriction = 0f;
+        noFriction.staticFriction = 0f;
+        noFriction.frictionCombine = PhysicsMaterialCombine.Minimum;
+        col.material = noFriction;
     }
 
     void Update()
