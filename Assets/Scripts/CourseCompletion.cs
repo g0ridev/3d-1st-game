@@ -2,14 +2,13 @@ using UnityEngine;
 
 public class course_completion : MonoBehaviour
 {
-    public GameObject winText;
+    public GameObject winPanel;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("You Win!");
-            winText.SetActive(true);
+            winPanel.SetActive(true);
 
             Rigidbody rb = other.GetComponent<Rigidbody>();
 
