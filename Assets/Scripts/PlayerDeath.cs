@@ -33,7 +33,6 @@ public class PlayerDeath : MonoBehaviour
     private void Die()
     {
         isDead = true;
-        Debug.Log("NEW DIE METHOD RUNNING");
 
         DeathPanel.SetActive(true);
 
