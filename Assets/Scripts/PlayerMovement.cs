@@ -10,7 +10,11 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+
         rb = GetComponent<Rigidbody>();
+            // Lock and hide cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         // Fixed friction, no clinging to walls
         Collider col = GetComponent<Collider>();
@@ -23,6 +27,12 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+            // Allow escape to unlock cursor (useful for testing)
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);

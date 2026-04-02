@@ -8,7 +8,9 @@ public class course_completion : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            GameManager.Instance.StopTimer();
             winPanel.SetActive(true);
+            
 
             Rigidbody rb = other.GetComponent<Rigidbody>();
 

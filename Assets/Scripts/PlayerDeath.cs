@@ -33,7 +33,7 @@ public class PlayerDeath : MonoBehaviour
     private void Die()
     {
         isDead = true;
-
+        GameManager.Instance.StopTimer();
         DeathPanel.SetActive(true);
 
         if(rb != null)
