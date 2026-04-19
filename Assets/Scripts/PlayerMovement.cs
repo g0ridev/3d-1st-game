@@ -8,11 +8,16 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded = false;
     public Transform cameraTransform; // Assign Main Camera / FreeLook Camera here
 
+    public AudioClip jumpSound;
+    private AudioSource audioSource;
+
+
     void Start()
     {
 
         rb = GetComponent<Rigidbody>();
-            // Lock and hide cursor
+        audioSource = GetComponent<AudioSource>();
+        // Lock and hide cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -37,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             isGrounded = false; // Will reset on collision with ground
+            audioSource.PlayOneShot(jumpSound);
         }
     }
 

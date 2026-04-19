@@ -8,9 +8,13 @@ public class PlayerDeath : MonoBehaviour
     private bool isDead = false;
     private Rigidbody rb;
 
+    public AudioClip deathSound;
+    private AudioSource audioSource;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -35,8 +39,9 @@ public class PlayerDeath : MonoBehaviour
         isDead = true;
         GameManager.Instance.StopTimer();
         DeathPanel.SetActive(true);
+        audioSource.PlayOneShot(deathSound);
 
-        if(rb != null)
+        if (rb != null)
         {
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
