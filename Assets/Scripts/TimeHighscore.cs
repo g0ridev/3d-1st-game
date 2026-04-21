@@ -21,7 +21,8 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (!isRunning) return;
+        if (!isRunning || timerText == null) return;
+
         timer += Time.deltaTime;
         int minutes = (int)(timer / 60);
         int seconds = (int)(timer % 60);
@@ -33,5 +34,8 @@ public class GameManager : MonoBehaviour
         isRunning = false;
     }
 
-    public float GetTime() { return timer; }
+    public float GetTime()
+    {
+        return timer;
+    }
 }
