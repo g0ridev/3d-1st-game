@@ -9,8 +9,11 @@ public class PlayerDeath : MonoBehaviour
     public TMP_Text finalTimeText;
     public TMP_Text finalCoinsText;
 
+    public Transform respawnPoint;
+
     private bool isDead = false;
     private Rigidbody rb;
+    private CharacterStats stats;
 
     public AudioClip deathSound;
     private AudioSource audioSource;
@@ -19,6 +22,7 @@ public class PlayerDeath : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
+        stats = GetComponent<CharacterStats>();
 
         if (DeathPanel != null)
         {
@@ -46,25 +50,31 @@ public class PlayerDeath : MonoBehaviour
     {
         isDead = true;
 
-        // Stop timer
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.StopTimer();
-        }
-
-        // Show panel
-        if (DeathPanel != null)
-        {
-            DeathPanel.SetActive(true);
-        }
-
         // Play sound
         if (audioSource != null && deathSound != null)
         {
             audioSource.PlayOneShot(deathSound);
         }
 
-        // Freeze player
+        // If player has an extra life, use it and respawn
+        if (stats != null && stats.HasExtraLife())
+        {
+            stats.LoseLife();
+            Respawn();
+            return;
+        }
+
+        // Otherwise: game over
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.StopTimer();
+        }
+
+        if (DeathPanel != null)
+        {
+            DeathPanel.SetActive(true);
+        }
+
         if (rb != null)
         {
             rb.linearVelocity = Vector3.zero;
@@ -72,7 +82,6 @@ public class PlayerDeath : MonoBehaviour
             rb.constraints = RigidbodyConstraints.FreezeAll;
         }
 
-        // ===== FINAL TIME =====
         if (finalTimeText != null && GameManager.Instance != null)
         {
             float time = GameManager.Instance.GetTime();
@@ -82,17 +91,36 @@ public class PlayerDeath : MonoBehaviour
             finalTimeText.text = "Time: " + minutes.ToString("00") + ":" + seconds.ToString("00");
         }
 
-        // ===== FINAL COINS =====
-        CharacterStats stats = GetComponent<CharacterStats>();
         if (finalCoinsText != null && stats != null)
         {
             finalCoinsText.text = "Coins: " + stats.coins;
         }
 
-        // Unlock mouse + pause
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
         Time.timeScale = 0f;
+    }
+
+    private void Respawn()
+    {
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.constraints = RigidbodyConstraints.None;
+            rb.constraints = RigidbodyConstraints.FreezeRotation;
+        }
+
+        if (respawnPoint != null)
+        {
+            transform.position = respawnPoint.position;
+        }
+        else
+        {
+            Debug.LogWarning("Respawn point not assigned!");
+        }
+
+        isDead = false;
     }
 }
